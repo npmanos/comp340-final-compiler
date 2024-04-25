@@ -59,7 +59,7 @@ class TreeNode[T]:
             get_children=get_children, get_val=get_val, return_instead_of_print=True
         )  # type: ignore
 
-        return pt(self)  # type: ignore
+        return '\n' + str(pt(self)) #type: ignore
 
 
 if __name__ == "__main__":
