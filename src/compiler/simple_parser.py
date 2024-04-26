@@ -1,31 +1,35 @@
+# ruff: noqa: F403
+# ruff: noqa: F405
+
 import os
 from compiler.binarytree import TreeNode
-from compiler.simple_tokenizer import Token, tokenize
+from compiler.tokens.simple_tokenizer import tokenize
+from compiler.tokens.simple_tokens import *
 
 
-def parse(srcList: list[Token]) -> TreeNode[Token]:
-    def parse_impl(srcList: list[TreeNode[Token]], last_precedence=-1) -> TreeNode[Token]:
+def parse(srcList: list[TokenBase]) -> TreeNode[TokenBase]:
+    def parse_impl(srcList: list[TreeNode[TokenBase]], last_precedence=-1) -> TreeNode[TokenBase]:
         while len(srcList) > 1:
             left_tree = srcList.pop()
 
-            if left_tree.data.type == 'MINUS' and left_tree.left is None and left_tree.right is None:
+            if isinstance(left_tree.data, Minus) and left_tree.left is None and left_tree.right is None:
                 negated_token = srcList.pop()
                 negated_token.left = left_tree
                 srcList.append(negated_token)
                 continue
 
-            if left_tree.data.type == "LPAREN":
+            if isinstance(left_tree.data, LeftParen):
                 paren_count = 1
-                sub_list: list[TreeNode[Token]] = []
+                sub_list: list[TreeNode[TokenBase]] = []
 
                 while paren_count > 0:
                     token = srcList.pop()
 
 
-                    if token.data.type == 'LPAREN':
+                    if isinstance(token.data, LeftParen):
                         paren_count += 1
                         sub_list.append(token)
-                    elif token.data.type == 'RPAREN':
+                    elif isinstance(token.data, RightParen):
                         paren_count -= 1
                         if paren_count > 0:
                             sub_list.append(token)
@@ -34,9 +38,9 @@ def parse(srcList: list[Token]) -> TreeNode[Token]:
                 
                 bracketed = parse_impl(sub_list[::-1])
 
-                if left_tree.left is not None and left_tree.left.data.type == 'MINUS':
-                    negated_bracketed = TreeNode(Token('*', 'MULT'))
-                    negated_bracketed.left = TreeNode(Token('1', 'NUMB'))
+                if left_tree.left is not None and isinstance(left_tree.left.data, Minus):
+                    negated_bracketed: TreeNode[TokenBase] = TreeNode(Mult())
+                    negated_bracketed.left = TreeNode(Number('1'))
                     negated_bracketed.left.left = left_tree.left
                     negated_bracketed.right = bracketed
 

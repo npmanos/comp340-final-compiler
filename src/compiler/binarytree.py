@@ -1,7 +1,10 @@
+from typing import Generic, TypeVar
 from PrettyPrint import PrettyPrintTree
 
 
-class TreeNode[T]:
+T = TypeVar('T', covariant=True)
+
+class TreeNode(Generic[T]):
     def __init__(self, data: T) -> None:
         self.data = data
         self.left: TreeNode[T] | None = None
