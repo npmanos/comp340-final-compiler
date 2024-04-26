@@ -8,6 +8,12 @@ def parse(srcList: list[Token]) -> TreeNode[Token]:
         while len(srcList) > 1:
             left_tree = srcList.pop()
 
+            if left_tree.data.type == 'MINUS':
+                negated_token = srcList.pop()
+                negated_token.left = left_tree
+                srcList.append(negated_token)
+                continue
+
             if left_tree.data.type == "LPAREN":
                 paren_count = 1
                 sub_list: list[TreeNode[Token]] = []
