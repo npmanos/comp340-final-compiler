@@ -117,7 +117,7 @@ class TestSimpleParser:
         expected_tree.right.right = TreeNode(Token("+", type="PLUS"))
         expected_tree.right.right.left = TreeNode(Token("/", type="DIV"))
         expected_tree.right.right.left.left = TreeNode(Token("5", type="NUMB"))
-        expected_tree.right.right.left.right = TreeNode(Token("4", type="DIV"))
+        expected_tree.right.right.left.right = TreeNode(Token("4", type="NUMB"))
         expected_tree.right.right.right = TreeNode(Token("7", type="NUMB"))
 
         assert expected_tree == parse(test_src_tokens)
