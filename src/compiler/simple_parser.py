@@ -8,7 +8,7 @@ def parse(srcList: list[Token]) -> TreeNode[Token]:
         while len(srcList) > 1:
             left_tree = srcList.pop()
 
-            if left_tree.data.type == 'MINUS':
+            if left_tree.data.type == 'MINUS' and left_tree.left is None and left_tree.right is None:
                 negated_token = srcList.pop()
                 negated_token.left = left_tree
                 srcList.append(negated_token)
