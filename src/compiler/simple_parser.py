@@ -1,5 +1,4 @@
 import os
-from typing import cast
 from compiler.binarytree import TreeNode
 from compiler.simple_tokenizer import Token, tokenize
 
@@ -8,6 +7,27 @@ def parse(srcList: list[Token]) -> TreeNode[Token]:
     def parse_impl(srcList: list[TreeNode[Token]], last_precedence=-1) -> TreeNode[Token]:
         while len(srcList) > 1:
             left_tree = srcList.pop()
+
+            if left_tree.data.type == "LPAREN":
+                paren_count = 1
+                sub_list: list[TreeNode[Token]] = []
+
+                while paren_count > 0:
+                    token = srcList.pop()
+
+
+                    if token.data.type == 'LPAREN':
+                        paren_count += 1
+                        sub_list.append(token)
+                    elif token.data.type == 'RPAREN':
+                        paren_count -= 1
+                        if paren_count > 0:
+                            sub_list.append(token)
+                    else:
+                        sub_list.append(token)
+                
+                srcList.append(parse_impl(sub_list[::-1]))
+                continue
 
             if last_precedence >= srcList[-1].data.precedence:
                 return left_tree
