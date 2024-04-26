@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Literal, SupportsFloat, overload
+from typing import Literal, overload
 
 __all__ = [
     'Precedence',
