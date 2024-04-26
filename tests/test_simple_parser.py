@@ -66,3 +66,58 @@ class TestSimpleParser:
         expected_tree.right = TreeNode(Token("7", "NUMB"))
 
         assert expected_tree == parse(test_src_tokens)
+    
+    def test_simple_parens(self):
+        test_src_tokens = [
+            Token(value="1", type="NUMB"),
+            Token(value="*", type="MULT"),
+            Token(value="(", type="LPAREN"),
+            Token(value="3", type="NUMB"),
+            Token(value="+", type="PLUS"),
+            Token(value="4", type="NUMB"),
+            Token(value=")", type="RPAREN"),
+        ]
+
+        expected_tree = TreeNode(Token("*", type="MULT"))
+        expected_tree.left = TreeNode(Token("1", type="NUMB"))
+        expected_tree.right = TreeNode(Token("+", type="PLUS"))
+        expected_tree.right.left = TreeNode(Token("3", type="NUMB"))
+        expected_tree.right.right = TreeNode(Token("4", type="NUMB"))
+
+        assert expected_tree == parse(test_src_tokens)
+    
+    def test_complex_parens(self):
+        # (1 + 3) * (2 - (5 / 4 + 7))
+        test_src_tokens = [
+            Token(value="(", type="LPAREN"),
+            Token(value="1", type="NUMB"),
+            Token(value="+", type="PLUS"),
+            Token(value="3", type="NUMB"),
+            Token(value=")", type="RPAREN"),
+            Token(value="*", type="MULT"),
+            Token(value="(", type="LPAREN"),
+            Token(value="2", type="NUMB"),
+            Token(value="-", type="MINUS"),
+            Token(value="(", type="LPAREN"),
+            Token(value="5", type="NUMB"),
+            Token(value="/", type="DIV"),
+            Token(value="4", type="NUMB"),
+            Token(value="+", type="PLUS"),
+            Token(value="7", type="NUMB"),
+            Token(value=")", type="RPAREN"),
+            Token(value=")", type="RPAREN"),
+        ]
+
+        expected_tree = TreeNode(Token("*", type='MULT'))
+        expected_tree.left = TreeNode(Token("+", type="PLUS"))
+        expected_tree.left.left = TreeNode(Token("1", type="NUMB"))
+        expected_tree.left.right = TreeNode(Token("3", type="NUMB"))
+        expected_tree.right = TreeNode(Token("-", type="MINUS"))
+        expected_tree.right.left = TreeNode(Token("2", type="NUMB"))
+        expected_tree.right.right = TreeNode(Token("+", type="PLUS"))
+        expected_tree.right.right.left = TreeNode(Token("/", type="DIV"))
+        expected_tree.right.right.left.left = TreeNode(Token("5", type="NUMB"))
+        expected_tree.right.right.left.right = TreeNode(Token("4", type="DIV"))
+        expected_tree.right.right.right = TreeNode(Token("7", type="NUMB"))
+
+        assert expected_tree == parse(test_src_tokens)
