@@ -10,7 +10,6 @@ class EvaluationError(Exception):
 
 
 def evaluate(srcTree: TreeNode[TokenBase]) -> float:
-    ...
     if isinstance(srcTree.data, Number) and srcTree.right is None:
         if srcTree.left is not None and isinstance(srcTree.left.data, PrefixOperator):
             return srcTree.left.data.evaluate(operand=float(srcTree.data))
