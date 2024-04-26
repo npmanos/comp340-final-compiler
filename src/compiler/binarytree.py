@@ -4,31 +4,8 @@ from PrettyPrint import PrettyPrintTree
 class TreeNode[T]:
     def __init__(self, data: T) -> None:
         self.data = data
-        self.parent: TreeNode[T] | None = None
-        self._left: TreeNode[T] | None = None
-        self._right: TreeNode[T] | None = None
-
-    @property
-    def left(self) -> "TreeNode[T] | None":
-        return self._left
-
-    @left.setter
-    def left(self, value: "TreeNode[T] | None") -> None:
-        self._left = value
-
-        if self._left is not None:
-            self._left.parent = self
-
-    @property
-    def right(self) -> "TreeNode[T] | None":
-        return self._right
-
-    @right.setter
-    def right(self, value: "TreeNode[T] | None") -> None:
-        self._right = value
-
-        if self._right is not None:
-            self._right.parent = self
+        self.left: TreeNode[T] | None = None
+        self.right: TreeNode[T] | None = None
 
     def __eq__(self, value: object) -> bool:
         return (
@@ -60,6 +37,9 @@ class TreeNode[T]:
         )  # type: ignore
 
         return '\n' + str(pt(self)) #type: ignore
+    
+    def __repr__(self) -> str:
+        return f'TreeNode(data={repr(self.data)}{"" if self.left is None else ", left=" + repr(self.left)}{"" if self.right is None else ", right=" + repr(self.right)})'
 
 
 if __name__ == "__main__":

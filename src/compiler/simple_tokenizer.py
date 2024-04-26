@@ -9,14 +9,14 @@ class Token(NamedTuple):
     @property
     def precedence(self) -> int:
         match self.type:
-            # case 'LPAREN' | 'RPAREN':
-            #     return 1
+            case 'LPAREN' | 'RPAREN':
+                return 3
             case 'MULT' | 'DIV':
                 return 2
             case 'PLUS' | 'MINUS':
                 return 1
             case _:
-                return 10
+                return -1
 
     # def __repr__(self):
         # return f'{self.value}\t{self.type}'
