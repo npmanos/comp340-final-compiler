@@ -1,87 +1,46 @@
 import os
+from typing import cast
 from compiler.binarytree import TreeNode
 from compiler.simple_tokenizer import Token, tokenize
-import logging as log
 
 
 def parse(srcList: list[Token]) -> TreeNode[Token]:
-    if len(srcList) == 1:
-        return TreeNode(srcList[0])
-    
-    log.debug(f'##### srcList = {srcList} #####')
-    
-    root = op = TreeNode(srcList[1])
-    op.left = TreeNode(srcList[0])
+    def parse_impl(srcList: list[TreeNode[Token]], last_precedence=-1) -> TreeNode[Token]:
+        while len(srcList) > 1:
+            left_tree = srcList.pop()
 
-    log.debug('op = ')
-    log.debug(op)
-
-    right_tree = parse(srcList[2:])
-
-    log.debug('op = ')
-    log.debug(op)
-
-    log.debug('right_tree = ')
-    log.debug(right_tree)
-    
-    if op.data.precedence >= right_tree.data.precedence:
-        while right_tree is not None and op.data.precedence >= right_tree.data.precedence:
-            log.debug(f'--- op ({op.data.value}): {op.data.precedence} >= right_tree ({right_tree.data.value}): {right_tree.data.precedence} ---')
-
-            parent = op.parent
-
-            op.right = right_tree.left
-
-            log.debug('# op.right = right_tree.left')
-            log.debug('op = ')
-            log.debug(op)
-
-            right_tree.left = op
-
-            log.debug('# right_tree.left = op')
-            log.debug('right_tree = ')
-            log.debug(right_tree)
+            if last_precedence >= srcList[-1].data.precedence:
+                return left_tree
             
-            if parent is not None:
-                parent.left = right_tree
-            else:
-                root = right_tree
+            op = srcList.pop()
+            right_tree = parse_impl(srcList, op.data.precedence)
 
-            op = right_tree.left
-            right_tree = op.right
+            op.left = left_tree
+            op.right = right_tree
 
-        log.debug('root = ')
-        log.debug(root)
+            srcList.append(op)
 
-        log.debug('**** return root ****')
+        return srcList.pop()
     
-        return root
+    # reverse list because python list implements stack ops backwards
+    # and then wrap each token in a tree node
+    nodeList = list(map(lambda t: TreeNode(t), srcList[::-1]))
 
-    op.right = right_tree
-
-    log.debug('op = ')
-    log.debug(op)
-
-    log.debug('**** return op ****')
-    
-
-    return op
+    return parse_impl(nodeList)
 
 if __name__ == '__main__':
-    log.basicConfig(level=log.DEBUG)
-
     os.system('clear')
 
     test_str = '1 + 3 * 2 - 5 / 4 + 7'
     # test_str = '1 * 3 + 4'
     # test_str = '1 + 3 * 4'
 
-    log.debug(test_str)
+    print(test_str)
 
     tokens = tokenize(test_str)
     parsed = parse(tokens)
 
-    log.debug(parsed)
+    print(parsed)
 
     root = TreeNode('+')
     root.left = TreeNode('-')
@@ -95,5 +54,5 @@ if __name__ == '__main__':
     root.left.right.right = TreeNode('4')
     root.right = TreeNode('7')
     
-    log.debug('CORRECT ANSWER:')
-    log.debug(root)
+    print('CORRECT ANSWER:')
+    print(root)
