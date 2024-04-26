@@ -37,6 +37,9 @@ class TreeNode[T]:
         )  # type: ignore
 
         return '\n' + str(pt(self)) #type: ignore
+    
+    def __repr__(self) -> str:
+        return f'TreeNode(data={repr(self.data)}{"" if self.left is None else ", left=" + repr(self.left)}{"" if self.right is None else ", right=" + repr(self.right)})'
 
 
 if __name__ == "__main__":
