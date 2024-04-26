@@ -121,3 +121,101 @@ class TestSimpleParser:
         expected_tree.right.right.right = TreeNode(Token("7", type="NUMB"))
 
         assert expected_tree == parse(test_src_tokens)
+    
+    def test_single_negation(self):
+        # -3
+        test_src_tokens = [
+            Token('-', 'MINUS'),
+            Token('3', 'NUMB')
+        ]
+
+        expected_tree = TreeNode(Token('3', 'NUMB'))
+        expected_tree.left = TreeNode(Token('-', 'MINUS'))
+
+        assert expected_tree == parse(test_src_tokens)
+    
+    def test_simple_negation_with_no_reorder(self):
+        # 1 + -3 * 4
+        test_src_tokens = [
+            Token("1", "NUMB"),
+            Token("+", "PLUS"),
+            Token("-", "MINUS"),
+            Token("3", "NUMB"),
+            Token("*", "MULT"),
+            Token("4", "NUMB"),
+        ]
+
+        expected_tree = TreeNode(Token("+", "PLUS"))
+        expected_tree.left = TreeNode(Token("1", "NUMB"))
+        expected_tree.right = TreeNode(Token("*", "MULT"))
+        expected_tree.right.left = TreeNode(Token("3", "NUMB"))
+        expected_tree.right.left.left = TreeNode(Token("-", "MINUS"))
+        expected_tree.right.right = TreeNode(Token("4", "NUMB"))
+
+        assert expected_tree == parse(test_src_tokens)
+    
+    def test_simple_negation_with_reorder(self):
+        # 1 * -3 + 4
+        test_src_tokens = [
+            Token("1", "NUMB"),
+            Token("*", "MULT"),
+            Token("-", "MINUS"),
+            Token("3", "NUMB"),
+            Token("+", "PLUS"),
+            Token("4", "NUMB"),
+        ]
+
+        expected_tree = TreeNode(Token("+", "PLUS"))
+        expected_tree.left = TreeNode(Token("*", "MULT"))
+        expected_tree.left.left = TreeNode(Token("1", "NUMB"))
+        expected_tree.left.right = TreeNode(Token("3", "NUMB"))
+        expected_tree.left.right.left = TreeNode(Token("-", "MINUS"))
+        expected_tree.right = TreeNode(Token("4", "NUMB"))
+
+        assert expected_tree == parse(test_src_tokens)
+    
+    def test_complex_negation(self):
+        # (1 + -3) * -(2 - (-5 / 4 + -7))
+        test_src_tokens = [
+            Token("(", "LPAREN"),
+            Token("1", "NUMB"),
+            Token("+", "PLUS"),
+            Token("-", "MINUS"),
+            Token("3", "NUMB"),
+            Token(")", "RPAREN"),
+            Token("*", "MULT"),
+            Token("-", "MINUS"),
+            Token("(", "LPAREN"),
+            Token("2", "NUMB"),
+            Token("-", "MINUS"),
+            Token("(", "LPAREN"),
+            Token("-", "MINUS"),
+            Token("5", "NUMB"),
+            Token("/", "DIV"),
+            Token("4", "NUMB"),
+            Token("+", "PLUS"),
+            Token("-", "MINUS"),
+            Token("7", "NUMB"),
+            Token(")", "RPAREN"),
+            Token(")", "RPAREN"),
+        ]
+
+        expected_tree = TreeNode(Token("*", 'MULT'))
+        expected_tree.left = TreeNode(Token("+", "PLUS"))
+        expected_tree.left.left = TreeNode(Token("1", "NUMB"))
+        expected_tree.left.right = TreeNode(Token("3", "NUMB"))
+        expected_tree.left.right.left = TreeNode(Token("-", "MINUS"))
+        expected_tree.right = TreeNode(Token("*", "MULT"))
+        expected_tree.right.left = TreeNode(Token("1", "NUMB"))
+        expected_tree.right.left.left = TreeNode(Token("-", "MINUS"))
+        expected_tree.right.right = TreeNode(Token("-", "MINUS"))
+        expected_tree.right.right.left = TreeNode(Token("2", "NUMB"))
+        expected_tree.right.right.right = TreeNode(Token("+", "PLUS"))
+        expected_tree.right.right.right.left = TreeNode(Token("/", "DIV"))
+        expected_tree.right.right.right.left.left = TreeNode(Token("5", "NUMB"))
+        expected_tree.right.right.right.left.left.left = TreeNode(Token("-", "MINUS"))
+        expected_tree.right.right.right.left.right = TreeNode(Token("4", "NUMB"))
+        expected_tree.right.right.right.right = TreeNode(Token("7", "NUMB"))
+        expected_tree.right.right.right.right.left = TreeNode(Token("-", "MINUS"))
+
+        assert expected_tree == parse(test_src_tokens)

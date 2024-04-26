@@ -8,6 +8,12 @@ def parse(srcList: list[Token]) -> TreeNode[Token]:
         while len(srcList) > 1:
             left_tree = srcList.pop()
 
+            if left_tree.data.type == 'MINUS' and left_tree.left is None and left_tree.right is None:
+                negated_token = srcList.pop()
+                negated_token.left = left_tree
+                srcList.append(negated_token)
+                continue
+
             if left_tree.data.type == "LPAREN":
                 paren_count = 1
                 sub_list: list[TreeNode[Token]] = []
@@ -26,7 +32,18 @@ def parse(srcList: list[Token]) -> TreeNode[Token]:
                     else:
                         sub_list.append(token)
                 
-                srcList.append(parse_impl(sub_list[::-1]))
+                bracketed = parse_impl(sub_list[::-1])
+
+                if left_tree.left is not None and left_tree.left.data.type == 'MINUS':
+                    negated_bracketed = TreeNode(Token('*', 'MULT'))
+                    negated_bracketed.left = TreeNode(Token('1', 'NUMB'))
+                    negated_bracketed.left.left = left_tree.left
+                    negated_bracketed.right = bracketed
+
+                    srcList.append(negated_bracketed)
+                    continue
+                
+                srcList.append(bracketed)
                 continue
 
             if last_precedence >= srcList[-1].data.precedence:
