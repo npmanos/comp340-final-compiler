@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Literal, overload
+from typing import Literal, SupportsFloat, overload
 
 __all__ = [
     'Precedence',
@@ -119,5 +119,5 @@ class Number(TokenBase):
         self.value = value
         self.precedence = 0
     
-    def __int__(self) -> int:
-        return int(self.value)
+    def __float__(self) -> float:
+        return float(self.value)
