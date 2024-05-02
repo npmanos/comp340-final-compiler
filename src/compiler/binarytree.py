@@ -2,7 +2,8 @@ from typing import Generic, TypeVar
 from PrettyPrint import PrettyPrintTree
 
 
-T = TypeVar('T', covariant=True)
+T = TypeVar("T", covariant=True)
+
 
 class TreeNode(Generic[T]):
     def __init__(self, data: T) -> None:
@@ -39,14 +40,14 @@ class TreeNode(Generic[T]):
             get_children=get_children, get_val=get_val, return_instead_of_print=True
         )  # type: ignore
 
-        return '\n' + str(pt(self)) #type: ignore
-    
+        return "\n" + str(pt(self))  # type: ignore
+
     def __repr__(self) -> str:
         return f'TreeNode(data={repr(self.data)}{"" if self.left is None else ", left=" + repr(self.left)}{"" if self.right is None else ", right=" + repr(self.right)})'
 
 
 if __name__ == "__main__":
-    __package__ = __package__ or 'compiler'
+    __package__ = __package__ or "compiler"
 
     node = TreeNode("+")
     node.left = TreeNode("1")

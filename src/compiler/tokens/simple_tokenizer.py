@@ -1,4 +1,4 @@
-#from typing import Literal, NamedTuple
+# from typing import Literal, NamedTuple
 
 from compiler.tokens.simple_tokens import (
     Precedence,
@@ -12,7 +12,7 @@ from compiler.tokens.simple_tokens import (
     Div,
     Plus,
     Minus,
-    Number
+    Number,
 )
 
 # type TokenType = Literal['NUMB', 'PLUS', 'MINUS', 'MULT', 'DIV', 'LPAREN', 'RPAREN']
@@ -20,7 +20,7 @@ from compiler.tokens.simple_tokens import (
 # class Token(NamedTuple):
 #     value: str
 #     type: TokenType
-    
+
 #     @property
 #     def precedence(self) -> int:
 #         match self.type:
@@ -36,15 +36,17 @@ from compiler.tokens.simple_tokens import (
 #     # def __repr__(self):
 #         # return f'{self.value}\t{self.type}'
 #         # return f"Token({self.value}, '{self.type}')"
-    
+
 #     def __str__(self) -> str:
 #         return self.value
+
 
 class TokenizeError(Exception):
     pass
 
+
 def tokenize(srcCode: str) -> list[TokenBase]:
-    tokenize_list: list[TokenBase] = [] # Initialize empty list
+    tokenize_list: list[TokenBase] = []  # Initialize empty list
 
     for c in srcCode:
         match c:
@@ -53,30 +55,31 @@ def tokenize(srcCode: str) -> list[TokenBase]:
                     tokenize_list[-1].value += c
                 else:
                     tokenize_list.append(Number(c))
-            case '+':
+            case "+":
                 tokenize_list.append(Plus())
-            case '-':
+            case "-":
                 tokenize_list.append(Minus())
-            case '*':
+            case "*":
                 tokenize_list.append(Mult())
-            case '/':
+            case "/":
                 tokenize_list.append(Div())
-            case '(':
+            case "(":
                 tokenize_list.append(LeftParen())
-            case ')':
+            case ")":
                 tokenize_list.append(RightParen())
             case c if c.isspace():
                 continue
             case _:
                 # If c doesn't match any of these cases, raise an error
-                raise TokenizeError(f'Unknown token {c} in {srcCode}')
+                raise TokenizeError(f"Unknown token {c} in {srcCode}")
 
     return tokenize_list
 
-if __name__ == '__main__':
-    __package__ = __package__ or 'compiler'
 
-    test_src = '(5 + 2) * (60 / 15) - 10'
+if __name__ == "__main__":
+    __package__ = __package__ or "compiler"
+
+    test_src = "(5 + 2) * (60 / 15) - 10"
 
     tokens = tokenize(test_src)
 

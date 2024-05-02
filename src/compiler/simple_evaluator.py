@@ -15,9 +15,14 @@ def evaluate(srcTree: TreeNode[TokenBase]) -> float:
             return srcTree.left.data.evaluate(operand=float(srcTree.data))
         else:
             return float(srcTree.data)
-    
-    if isinstance(srcTree.data, InfixOperator) and srcTree.left is not None and srcTree.right is not None:
-        return srcTree.data.evaluate(left_operand=evaluate(srcTree.left), right_operand=evaluate(srcTree.right))
-    
+
+    if (
+        isinstance(srcTree.data, InfixOperator)
+        and srcTree.left is not None
+        and srcTree.right is not None
+    ):
+        return srcTree.data.evaluate(
+            left_operand=evaluate(srcTree.left), right_operand=evaluate(srcTree.right)
+        )
+
     raise EvaluationError
-        
