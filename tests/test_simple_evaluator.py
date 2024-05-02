@@ -3,7 +3,7 @@
 
 from compiler.binarytree import TreeNode
 from compiler.simple_evaluator import evaluate
-from compiler.tokens.simple_tokens import *
+from compiler.simple_tokens import *
 
 class TestSimpleEvaluator:
     def test_add(self):

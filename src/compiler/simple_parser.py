@@ -2,9 +2,9 @@
 # ruff: noqa: F405
 
 import os
-from compiler.binarytree import TreeNode
-from compiler.tokens.simple_tokenizer import tokenize
-from compiler.tokens.simple_tokens import *
+from .binarytree import TreeNode
+from .simple_tokenizer import tokenize
+from .simple_tokens import *
 
 
 def parse(srcList: list[TokenBase]) -> TreeNode[TokenBase]:

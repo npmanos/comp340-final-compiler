@@ -1,6 +1,6 @@
 # from typing import Literal, NamedTuple
 
-from compiler.tokens.simple_tokens import (
+from .simple_tokens import (
     Precedence,
     TokenBase,
     Operator,
