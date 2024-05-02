@@ -1,10 +1,10 @@
 from abc import ABC, abstractmethod
-from typing import Literal, overload
+from typing import TypeAlias
+from typing import Literal
 
 __all__ = [
     "Precedence",
     "TokenBase",
-    "Operator",
     "PrefixOperator",
     "InfixOperator",
     "LeftParen",
@@ -16,7 +16,8 @@ __all__ = [
     "Number",
 ]
 
-type Precedence = Literal[0, 1, 2, 3]
+Precedence: TypeAlias = Literal[0, 1, 2, 3]
+NumberType: TypeAlias = int | float
 
 
 class TokenBase(ABC):
@@ -33,21 +34,15 @@ class TokenBase(ABC):
         return f"{self.__class__.__name__}(value={repr(self.value)})"
 
 
-class Operator(TokenBase):
-    @classmethod
-    def __subclasshook__(cls, subclass: type) -> bool:
-        return hasattr(subclass, "evaluate") and callable(subclass.evaluate)
-
-
-class PrefixOperator(Operator):
+class PrefixOperator(TokenBase):
     @abstractmethod
-    def evaluate(self, operand: float) -> float:
+    def eval_prefix(self, operand: int | float) -> int | float:
         raise NotImplementedError
 
 
-class InfixOperator(Operator):
+class InfixOperator(TokenBase):
     @abstractmethod
-    def evaluate(self, left_operand: float, right_operand: float) -> float:
+    def eval_infix(self, left_operand: int | float, right_operand: int | float) -> int | float:
         raise NotImplementedError
 
 
@@ -68,7 +63,7 @@ class Mult(InfixOperator):
         self.value = "*"
         self.precedence = 2
 
-    def evaluate(self, left_operand: float, right_operand: float) -> float:
+    def eval_infix(self, left_operand: int | float, right_operand: int | float) -> int | float:
         return left_operand * right_operand
 
 
@@ -77,7 +72,7 @@ class Div(InfixOperator):
         self.value = "/"
         self.precedence = 2
 
-    def evaluate(self, left_operand: float, right_operand: float) -> float:
+    def eval_infix(self, left_operand: int | float, right_operand: int | float) -> int | float:
         return left_operand / right_operand
 
 
@@ -86,7 +81,7 @@ class Plus(InfixOperator):
         self.value = "+"
         self.precedence = 1
 
-    def evaluate(self, left_operand: float, right_operand: float) -> float:
+    def eval_infix(self, left_operand: int | float, right_operand: int | float) -> int | float:
         return left_operand + right_operand
 
 
@@ -95,23 +90,11 @@ class Minus(PrefixOperator, InfixOperator):
         self.value = "-"
         self.precedence = 1
 
-    @overload
-    def evaluate(self, *, operand: float) -> float: ...
-    @overload
-    def evaluate(self, *, left_operand: float, right_operand: float) -> float: ...
-    def evaluate(self, **kwargs: float) -> float:
-        assert not kwargs.keys() >= {"operand", "left_operand", "right_operand"}
-        assert not (
-            kwargs.keys() == {"operand"}
-            and kwargs.keys() == {"left_operand", "right_operand"}
-        )
-
-        if "operand" in kwargs:
-            return -1 * kwargs["operand"]
-        elif kwargs.keys() >= {"left_operand", "right_operand"}:
-            return kwargs["left_operand"] - kwargs["right_operand"]
-        else:
-            raise TypeError
+    def eval_prefix(self, operand: int | float) -> int | float:
+        return -operand
+    
+    def eval_infix(self, left_operand: int | float, right_operand: int | float) -> int | float:
+        return left_operand - right_operand
 
 
 class Number(TokenBase):
@@ -121,3 +104,6 @@ class Number(TokenBase):
 
     def __float__(self) -> float:
         return float(self.value)
+    
+    def __int__(self) -> int:
+        return int(self.value)

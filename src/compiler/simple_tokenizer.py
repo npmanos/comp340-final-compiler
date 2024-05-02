@@ -1,11 +1,7 @@
 # from typing import Literal, NamedTuple
 
 from .simple_tokens import (
-    Precedence,
     TokenBase,
-    Operator,
-    PrefixOperator,
-    InfixOperator,
     LeftParen,
     RightParen,
     Mult,
