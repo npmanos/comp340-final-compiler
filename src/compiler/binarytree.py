@@ -1,6 +1,13 @@
-from typing import Generic, TypeGuard, TypeVar
+from typing import Callable, Generic, TypeGuard, TypeVar
 
-from PrettyPrint import PrettyPrintTree
+try:
+    from PrettyPrint import PrettyPrintTree # type: ignore
+except ImportError:
+    from pprint import pformat
+    from functools import partial
+
+    def PrettyPrintTree(*args, **kwargs) -> Callable[..., str | None]:
+        return partial(pformat, sort_dicts=False)
 
 __all__ = ("TreeNode", "treedata_isinstance")
 
