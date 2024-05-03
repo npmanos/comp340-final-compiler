@@ -1,6 +1,6 @@
 # from typing import Literal, NamedTuple
 
-from .simple_tokens import (
+from simple_tokens import (
     TokenBase,
     LeftParen,
     RightParen,
