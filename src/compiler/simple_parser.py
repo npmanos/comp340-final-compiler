@@ -1,5 +1,4 @@
-# ruff: noqa: F403
-# ruff: noqa: F405
+# ruff: noqa: F403, F405
 
 
 from .binarytree import TreeNode

@@ -5,6 +5,8 @@ iniconfig==2.0.0
 packaging==24.0
 pluggy==1.5.0
 PrettyPrintTree==2.0.0
+prompt-toolkit==3.0.43
+Pygments==2.17.2
 pyperclip==1.8.2
 pytest==8.1.1
 wcwidth==0.2.13

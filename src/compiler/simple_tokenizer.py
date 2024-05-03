@@ -10,14 +10,14 @@ from .simple_tokens import (
 )
 
 
-class TokenizeError(Exception):
+class TokenizeError(SyntaxError):
     pass
 
 
 def tokenize(srcCode: str) -> list[TokenBase]:
     tokenize_list: list[TokenBase] = []  # Initialize empty list
 
-    for c in srcCode:
+    for idx, c in enumerate(srcCode, 1):
         match c:
             case c if c.isdigit():
                 if len(tokenize_list) > 0 and isinstance(tokenize_list[-1], Number):
@@ -40,6 +40,6 @@ def tokenize(srcCode: str) -> list[TokenBase]:
                 continue
             case _:
                 # If c doesn't match any of these cases, raise an error
-                raise TokenizeError(f"Unknown token {c} in {srcCode}")
+                raise TokenizeError(f"Unknown token {c}", (None, None, idx, srcCode, None, idx))
 
     return tokenize_list

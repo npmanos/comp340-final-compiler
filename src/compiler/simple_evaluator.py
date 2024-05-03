@@ -7,7 +7,7 @@ from .binarytree import TreeNode, treedata_isinstance
 from .simple_tokens import *
 
 
-class EvaluationError(Exception):
+class EvaluationError(SyntaxError):
     pass
 
 
@@ -23,7 +23,7 @@ def evaluate(srcTree: TreeNode[TokenBase]) -> NumberType:
                     not treedata_isinstance(negation_stack[-1].left, PrefixOperator)
                     or negation_stack[-1].right is not None
                 ):
-                    raise EvaluationError
+                    raise EvaluationError(f'Unable to evaluate {srcTree.data}')
 
                 negation_stack.append(negation_stack[-1].left)
 
@@ -44,4 +44,4 @@ def evaluate(srcTree: TreeNode[TokenBase]) -> NumberType:
             left_operand=evaluate(srcTree.left), right_operand=evaluate(srcTree.right)
         )
 
-    raise EvaluationError
+    raise EvaluationError(f'Unable to evaluate {srcTree.data}')
