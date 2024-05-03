@@ -1,6 +1,8 @@
-from typing import Generic, TypeVar
+from typing import Generic, TypeGuard, TypeVar
+
 from PrettyPrint import PrettyPrintTree
 
+__all__ = ("TreeNode", "treedata_isinstance")
 
 T = TypeVar("T", covariant=True)
 
@@ -44,6 +46,13 @@ class TreeNode(Generic[T]):
 
     def __repr__(self) -> str:
         return f'TreeNode(data={repr(self.data)}{"" if self.left is None else ", left=" + repr(self.left)}{"" if self.right is None else ", right=" + repr(self.right)})'
+
+
+_T = TypeVar("_T", covariant=True)
+
+
+def treedata_isinstance(val: TreeNode[T], clazz: type[_T]) -> TypeGuard[TreeNode[_T]]:
+    return isinstance(val.data, clazz)
 
 
 if __name__ == "__main__":

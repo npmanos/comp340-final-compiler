@@ -1,9 +1,9 @@
 from abc import ABC, abstractmethod
-from typing import TypeAlias
-from typing import Literal
+from typing import Literal, TypeAlias
 
 __all__ = [
     "Precedence",
+    "NumberType",
     "TokenBase",
     "PrefixOperator",
     "InfixOperator",
@@ -36,13 +36,15 @@ class TokenBase(ABC):
 
 class PrefixOperator(TokenBase):
     @abstractmethod
-    def eval_prefix(self, operand: int | float) -> int | float:
+    def eval_prefix(self, operand: NumberType) -> NumberType:
         raise NotImplementedError
 
 
 class InfixOperator(TokenBase):
     @abstractmethod
-    def eval_infix(self, left_operand: int | float, right_operand: int | float) -> int | float:
+    def eval_infix(
+        self, left_operand: NumberType, right_operand: NumberType
+    ) -> NumberType:
         raise NotImplementedError
 
 
@@ -63,7 +65,9 @@ class Mult(InfixOperator):
         self.value = "*"
         self.precedence = 2
 
-    def eval_infix(self, left_operand: int | float, right_operand: int | float) -> int | float:
+    def eval_infix(
+        self, left_operand: NumberType, right_operand: NumberType
+    ) -> NumberType:
         return left_operand * right_operand
 
 
@@ -72,7 +76,9 @@ class Div(InfixOperator):
         self.value = "/"
         self.precedence = 2
 
-    def eval_infix(self, left_operand: int | float, right_operand: int | float) -> int | float:
+    def eval_infix(
+        self, left_operand: NumberType, right_operand: NumberType
+    ) -> NumberType:
         return left_operand / right_operand
 
 
@@ -81,7 +87,9 @@ class Plus(InfixOperator):
         self.value = "+"
         self.precedence = 1
 
-    def eval_infix(self, left_operand: int | float, right_operand: int | float) -> int | float:
+    def eval_infix(
+        self, left_operand: NumberType, right_operand: NumberType
+    ) -> NumberType:
         return left_operand + right_operand
 
 
@@ -90,10 +98,12 @@ class Minus(PrefixOperator, InfixOperator):
         self.value = "-"
         self.precedence = 1
 
-    def eval_prefix(self, operand: int | float) -> int | float:
+    def eval_prefix(self, operand: NumberType) -> NumberType:
         return -operand
-    
-    def eval_infix(self, left_operand: int | float, right_operand: int | float) -> int | float:
+
+    def eval_infix(
+        self, left_operand: NumberType, right_operand: NumberType
+    ) -> NumberType:
         return left_operand - right_operand
 
 
@@ -104,6 +114,6 @@ class Number(TokenBase):
 
     def __float__(self) -> float:
         return float(self.value)
-    
+
     def __int__(self) -> int:
         return int(self.value)

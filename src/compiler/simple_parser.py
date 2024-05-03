@@ -2,6 +2,7 @@
 # ruff: noqa: F405
 
 import os
+
 from .binarytree import TreeNode
 from .simple_tokenizer import tokenize
 from .simple_tokens import *
@@ -16,7 +17,7 @@ def parse(srcList: list[TokenBase]) -> TreeNode[TokenBase]:
 
             if (
                 isinstance(left_tree.data, Minus)
-                and left_tree.left is None
+                and (left_tree.left is None or isinstance(left_tree.left.data, Minus))
                 and left_tree.right is None
             ):
                 negated_token = srcList.pop()
