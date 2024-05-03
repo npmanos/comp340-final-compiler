@@ -1,6 +1,5 @@
 # ruff: noqa: F403, F405
 
-from functools import partial
 import os
 import sys
 from traceback import format_exception, format_exception_only
@@ -10,27 +9,24 @@ from compiler import *
 from compiler.simple_evaluator import EvaluationError
 from compiler.simple_tokenizer import TokenizeError
 
-
 try:
-    from prompt_toolkit import PromptSession
-    from prompt_toolkit import HTML, print_formatted_text
+    from prompt_toolkit import HTML, PromptSession, print_formatted_text
     from prompt_toolkit.formatted_text import PygmentsTokens
     from prompt_toolkit.lexers import PygmentsLexer
-    from prompt_toolkit.styles.pygments import style_from_pygments_cls
-    from pygments.lexers.python import PythonConsoleLexer
-    from pygments.styles import get_style_by_name
     from pygments import lex
+    from pygments.lexers.python import PythonConsoleLexer
 
     _width, _ = os.get_terminal_size()
 
     _bottom_text_left = "Enter math expression to evaluate"
     _bottom_text_right = f'{"COMP 340 Math REPL":>{_width - len(_bottom_text_left)}}'
 
-    _bottom_text = HTML(f'<b>{_bottom_text_left}{_bottom_text_right}</b>')
+    _bottom_text = HTML(f"<b>{_bottom_text_left}{_bottom_text_right}</b>")
 
-    # _style = style_from_pygments_cls(get_style_by_name('vim'))
-
-    _session = PromptSession(lexer=PygmentsLexer(PythonConsoleLexer), bottom_toolbar=_bottom_text,)# style=_style)
+    _session = PromptSession(
+        lexer=PygmentsLexer(PythonConsoleLexer),
+        bottom_toolbar=_bottom_text,
+    )  # style=_style)
     input = _session.prompt
 
     _lexer = PythonConsoleLexer()
@@ -41,24 +37,25 @@ try:
 
         if end is None:
             end = ""
-        
+
         src_code = sep.join(map(str, values))
 
         tokens = list(lex(src_code, _lexer))
         print_formatted_text(PygmentsTokens(tokens), end=end)
 except ImportError:
-    # print = partial(print, end="")
     pass
 
 __all__ = ()
 
-PROMPT = '>>> '
+PROMPT = ">>> "
+
 
 def clear() -> None:
-    if os.name == 'nt':
-        os.system('cls')
+    if os.name == "nt":
+        os.system("cls")
     else:
-        os.system('clear')
+        os.system("clear")
+
 
 def repl() -> NoReturn:
     clear()
@@ -66,12 +63,12 @@ def repl() -> NoReturn:
         try:
             user_input: str = input(PROMPT)
 
-            if user_input.lower() == 'exit':
+            if user_input.lower() == "exit":
                 raise EOFError
         except KeyboardInterrupt:
             continue
         except EOFError:
-            print('Now it is time to exit.')
+            print("Now it is time to exit.")
             sys.exit(0)
         else:
             try:
@@ -88,5 +85,6 @@ def repl() -> NoReturn:
             except Exception as e:
                 print(*format_exception(e), sep="", end="")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     repl()
