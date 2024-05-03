@@ -3,8 +3,8 @@
 
 from functools import reduce
 
-from binarytree import TreeNode, treedata_isinstance
-from simple_tokens import *
+from .binarytree import TreeNode, treedata_isinstance
+from .simple_tokens import *
 
 
 class EvaluationError(Exception):

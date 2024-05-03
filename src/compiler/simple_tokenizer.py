@@ -1,40 +1,13 @@
-# from typing import Literal, NamedTuple
-
-from simple_tokens import (
-    TokenBase,
-    LeftParen,
-    RightParen,
-    Mult,
+from .simple_tokens import (
     Div,
-    Plus,
+    LeftParen,
     Minus,
+    Mult,
     Number,
+    Plus,
+    RightParen,
+    TokenBase,
 )
-
-# type TokenType = Literal['NUMB', 'PLUS', 'MINUS', 'MULT', 'DIV', 'LPAREN', 'RPAREN']
-
-# class Token(NamedTuple):
-#     value: str
-#     type: TokenType
-
-#     @property
-#     def precedence(self) -> int:
-#         match self.type:
-#             case 'LPAREN' | 'RPAREN':
-#                 return 3
-#             case 'MULT' | 'DIV':
-#                 return 2
-#             case 'PLUS' | 'MINUS':
-#                 return 1
-#             case _:
-#                 return -1
-
-#     # def __repr__(self):
-#         # return f'{self.value}\t{self.type}'
-#         # return f"Token({self.value}, '{self.type}')"
-
-#     def __str__(self) -> str:
-#         return self.value
 
 
 class TokenizeError(Exception):
@@ -70,16 +43,3 @@ def tokenize(srcCode: str) -> list[TokenBase]:
                 raise TokenizeError(f"Unknown token {c} in {srcCode}")
 
     return tokenize_list
-
-
-if __name__ == "__main__":
-    __package__ = __package__ or "compiler"
-
-    test_src = "(5 + 2) * (60 / 15) - 10"
-
-    tokens = tokenize(test_src)
-
-    print(test_src)
-
-    for token in tokens:
-        print(repr(token))

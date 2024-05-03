@@ -35,12 +35,20 @@ class TokenBase(ABC):
 
 
 class PrefixOperator(TokenBase):
+    @classmethod
+    def __subclasshook__(cls, subclass: type) -> bool:
+        return hasattr(subclass, "eval_prefix") and callable(subclass.eval_prefix)
+
     @abstractmethod
     def eval_prefix(self, operand: NumberType) -> NumberType:
         raise NotImplementedError
 
 
 class InfixOperator(TokenBase):
+    @classmethod
+    def __subclasshook__(cls, subclass: type) -> bool:
+        return hasattr(subclass, "eval_infix") and callable(subclass.eval_infix)
+
     @abstractmethod
     def eval_infix(
         self, left_operand: NumberType, right_operand: NumberType
