@@ -23,12 +23,12 @@ if BABY_MODE_ENABLED:
     _bottom_text_right = "comp 340 baby woop"
 
     _pt_avail = importlib.util.find_spec("prompt_toolkit") is not None
-    _transl_fmt_open = "<ansigray><i>" if _pt_avail else ""
-    _transl_fmt_close = "</i></ansigray>" if _pt_avail else ""
+    _transl_fmt_open = "<ansiblue><i>" if _pt_avail else ""
+    _transl_fmt_close = "</i></ansiblue>" if _pt_avail else ""
 
     def process_input(user_input: str) -> NumberType:
         math_src = decipher(user_input)
-        print(f"... {_transl_fmt_open}Evaluating as {math_src}{_transl_fmt_close}")
+        print(f" {_transl_fmt_open}Evaluating as {math_src}{_transl_fmt_close}")
         return evaluate(parse(tokenize(math_src)))
 else:
     greeting_str = ""
