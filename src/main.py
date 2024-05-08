@@ -57,7 +57,7 @@ try:
     _session = PromptSession(
         lexer=PygmentsLexer(PythonConsoleLexer),
         bottom_toolbar=_bottom_text,
-    )  # style=_style)
+    )
     input = _session.prompt
 
     _lexer = PythonConsoleLexer()
@@ -76,7 +76,7 @@ try:
     def print_ans(*values: object, sep: str | None = "", end: str | None = ""):
         print("<ansibrightgreen>", *values, "</ansibrightgreen>", sep, end)
 
-    def print_err(*values: object, sep: str | None = " ", end: str | None = ""):
+    def print_exc(*values: object, sep: str | None = " ", end: str | None = ""):
         if sep is None:
             sep = ""
 
@@ -88,7 +88,7 @@ try:
         tokens = list(lex(src_code, _lexer))
         print_formatted_text(PygmentsTokens(tokens), end=end)
 except ImportError:
-    print_ans = print_err = print
+    print_ans = print_exc = print
 
 __all__ = []
 
@@ -130,9 +130,9 @@ def repl() -> NoReturn:
                 e.end_lineno = 1
                 e.end_offset = e.end_offset or len(user_input) + 1
 
-                print_err(*format_exception_only(e), sep="", end="")
+                print_exc(*format_exception_only(e), sep="", end="")
             except Exception as e:
-                print_err(*format_exception(e), sep="", end="")
+                print_exc(*format_exception(e), sep="", end="")
 
 
 if __name__ == "__main__":
