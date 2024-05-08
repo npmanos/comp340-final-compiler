@@ -46,4 +46,5 @@ def decipher(babyExp: str) -> str:
                     ),
                 )
 
+    deciphered_code += cur_baby_word
     return deciphered_code
