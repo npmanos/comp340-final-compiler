@@ -1,3 +1,4 @@
+from ._utils import SyntaxErrorDetails as SynErrDetails
 from .simple_tokens import (
     Div,
     LeftParen,
@@ -40,8 +41,12 @@ def tokenize(srcCode: str) -> list[TokenBase]:
                 continue
             case _:
                 # If c doesn't match any of these cases, raise an error
+                # raise TokenizeError(
+                #     f"Unknown token {c}", (None, None, idx, srcCode, None, idx)
+                # )
                 raise TokenizeError(
-                    f"Unknown token {c}", (None, None, idx, srcCode, None, idx)
+                    f"Unknown token {c}",
+                    SynErrDetails(offset=idx, text=srcCode, end_offset=idx),
                 )
 
     return tokenize_list
