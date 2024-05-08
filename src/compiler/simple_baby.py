@@ -1,6 +1,5 @@
-from abc import abstractmethod
+from ._utils import T, Predicate, SupportsLPop
 from collections import Counter, deque
-from typing import Callable, Collection, Protocol, SupportsIndex, TypeAlias, TypeVar
 
 
 __all__ = [
@@ -9,24 +8,14 @@ __all__ = [
 
 BABY_WORDS = {"pee": "+", "gah": "-", "milk": "*", "heh": "/", "mama": "(", "dada": ")"}
 
-T = TypeVar("T", covariant=True)
-
-Predicate: TypeAlias = Callable[[T], bool]
-
-
-class SupportsLPop(Collection[T], Protocol[T]):
-    @abstractmethod
-    def __getitem__(self, key: SupportsIndex, /) -> T:
-        raise NotImplementedError
-
-    @abstractmethod
-    def popleft(self) -> T:
-        raise NotImplementedError
-
 
 def popwhile(predicate: Predicate[T], iterable: SupportsLPop[T]):
     while len(iterable) > 0 and predicate(iterable[0]):
         yield iterable.popleft()
+
+
+class BabySyntaxError(SyntaxError):
+    pass
 
 
 def decipher(babyExp: str) -> str:
