@@ -1,4 +1,4 @@
-from ._utils import T, Predicate, SupportsLPop
+from ._utils import T, Predicate, SupportsLPop, SyntaxErrorDetails as SynErrDetails
 from collections import Counter, deque
 
 
@@ -37,6 +37,13 @@ def decipher(babyExp: str) -> str:
                     deciphered_code += BABY_WORDS[cur_baby_word]
                     cur_baby_word = ""
             case _:
-                raise SyntaxError
+                raise BabySyntaxError(
+                    f"Unknown symbol {c}",
+                    SynErrDetails(
+                        offset=len(babyExp) - len(baby_que),
+                        text=babyExp,
+                        end_offset=len(babyExp) - len(baby_que),
+                    ),
+                )
 
     return deciphered_code
